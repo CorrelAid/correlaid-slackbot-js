@@ -1,0 +1,16 @@
+
+Willkommen im CorrelAid Slack, dem virtuellen Herzen :heart: unseres Vereins.
+Na super, denkst du dir vielleicht, eine Begrüßung, von einem Chatbot. :see_no_evil:
+Keine Angst, wir haben auch Menschen hier, allerdings übernehme ich den ersten Crashkurs, da ich im Gegensatz zu den unaufmerksamen Menschen (:face_with_rolling_eyes:) immer merke wenn jemand dem Slack beitritt:
+
+:arrow_right: Was ist Slack? Slack ist eine Art digitaler Arbeitsplatz, ein Forum mit verschiedenen “Channeln” zu verschiedenen Themen, in denen Dinge besprochen werden können. Für den Anfang haben wir dich erst einmal nur den wichtigsten Channeln hinzugefügt. Alle anderen Channel findest du, wenn du links in der Leiste auf „Channels“ klickst. Tritt gerne allen bei, die für dich spannend klingen: Du kannst nichts falsch oder kaputt machen. Falls die Channel-Namen nicht selbsterklärend sein sollten, findest du im Willkommenshackmd (siehe unten) eine kurze Beschreibung aller Channel.
+
+:arrow_right: Anfangen könntest du z.B. direkt im Channel <#C1G5WNB7C|willkommen>. Hier kündigen wir auch regelmäßig Videokonferenzen zur Einführung der „Neulinge“ an. Wenn du mehr über CorrelAid erfahren willst und alle deine Fragen loswerden willst, solltest du schauen, wann die nächste Konferenz stattfindet! Zudem wäre es super, wenn du dich in diesem Channel kurz in 2-3 Sätzen vorstellen könntest.
+
+:arrow_right: Dokumentation bei CorrelAid läuft über HackMds. Das sind Dokumente, an denen man gemeinsam arbeiten kann und die zum Protokollieren von TelKos (Telefonkonferenzen), Planungen und Ideensammlungen genutzt werden. In unserem Willkommenshackmd (http://bit.ly/2GqGEP9) findest du die wichtigsten Infos zur Benutzung von Hackmd und andere nützliche Infos wie z.B. eine Liste menschlicher Ansprechpartner*innen und eine Übersicht über die Slackchannels. :wink: 
+
+:arrow_right: Apropos TelKo. :phone: Unsere Telefonkonferenzen finden jede Woche montags um 20 Uhr statt. Weiteres dazu findest du im Willkommenshackmd oder im Slack Channel <#C3F4BHRGC|telko>
+
+:arrow_right: Solltest du noch Fragen haben, nachdem du das hier alles gelesen hast (oder auch sonst), wende dich an <@U0C2DV2FN> . Am besten benutzt zu dazu die “direct messages” auf der linken Seite. Oder frage einfach direkt alle im Channel <#C2X7037K7|netzwerk-help>. 
+
+Das wars erst einmal von meiner Seite :robot_face: und nun vergiss nicht, dich in <#C1G5WNB7C|willkommen> kurz vorzustellen und klick drauf los!
