@@ -1,24 +1,8 @@
 require('dotenv').config();
 const axios = require('axios');
-const fs = require('fs');
 const querystring = require('querystring');
+const utils = require('../utils/utils');
 const SLACK_API_TOKEN = process.env.SLACK_API_TOKEN;
-const crypto = require('crypto');
-
-const readFromFile = path => {
-  try {
-    const message = fs.readFileSync(path, 'utf-8');
-    return message;
-  } catch (error) {
-    console.error('error during reading file:', error);
-    throw error;
-  }
-};
-
-const containsLinkFromDomain = (linkList, targetDomain) => {
-  const linksFiltered = linkList.filter(link => link.domain === targetDomain);
-  return linksFiltered.length > 0;
-};
 
 const open_conversation = user => {
   // open conversation
@@ -59,7 +43,7 @@ async function send_welcome_message_to(user) {
     console.error('something went wrong during opening the conversation.');
     return channelId;
   } else {
-    const message = await readFromFile('./src/messages/welcome_message.txt');
+    const message = await utils.readFromFile('./src/messages/welcome_message.txt');
     return send_message_to(user, message);
   }
 }
@@ -119,6 +103,4 @@ const commentOnPost = async (messageTs, channelId, message) => {
 module.exports = {
   send_welcome_message_to,
   commentOnPost,
-  containsLinkFromDomain,
-  readFromFile,
 };

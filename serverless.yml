@@ -30,17 +30,23 @@ provider:
   name: aws
   runtime: nodejs10.x
   region: eu-central-1
-  stage: prod
   profile: personal-admin
   environment: 
-    SLACK_API_TOKEN: ${file(./env.yml):prod.SLACK_API_TOKEN}
-    SLACK_SIGNING_SECRET: ${file(./env.yml):prod.SLACK_SIGNING_SECRET}
+    SLACK_API_TOKEN: ${file(./env.yml):default.SLACK_API_TOKEN}
+    SLACK_SIGNING_SECRET: ${file(./env.yml):default.SLACK_SIGNING_SECRET}
 
 functions:
-  slack:
-    handler: src/slack.handler
+  events:
+    handler: src/events/react.handler
     events:
       - http:
-          path: correlaid-slackbot-js/slack-message
+          path: correlaid-slackbot-js/slack-events
+          method: post
+          cors: false
+  slash:
+    handler: src/slash/telko.handler
+    events:
+      - http:
+          path: correlaid-slackbot-js/slack-slash
           method: post
           cors: false

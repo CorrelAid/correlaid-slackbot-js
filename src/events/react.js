@@ -1,10 +1,7 @@
-const axios = require('axios');
-const responses = require('./utils/responses');
-const logger = require('./utils/logger');
-const slackUtils = require('./utils/slackUtils');
-const verifyUtils = require('./utils/verifyUtils');
-
-const SLACK_API_TOKEN = process.env.SLACK_API_TOKEN;
+const responses = require('../utils/responses');
+const slackUtils = require('../utils/slackUtils');
+const verifyUtils = require('../utils/verifyUtils');
+const utils = require('../utils/utils');
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET;
 
 module.exports.handler = async function(event, context) {
@@ -34,8 +31,8 @@ module.exports.handler = async function(event, context) {
         return responses.buildSuccessResponse('success');
       }
     } else if (slackEvent.type === 'link_shared') {
-      if (slackUtils.containsLinkFromDomain(slackEvent.links, 'hackmd.io')) {
-        const message = slackUtils.readFromFile(
+      if (utils.containsLinkFromDomain(slackEvent.links, 'hackmd.io')) {
+        const message = utils.readFromFile(
           './src/messages/link_to_orgapad.txt'
         );
         await slackUtils.commentOnPost(

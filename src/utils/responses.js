@@ -28,8 +28,19 @@ const buildSuccessResponse = message => {
   };
 };
 
+const buildSlashCommandResponse = (text, visibility) => {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      response_type: visibility,
+      text: text,
+    }),
+  };
+};
+
 module.exports = {
   buildUrlVerificationResponse,
   buildSuccessResponse,
   buildForbiddenResponse,
+  buildSlashCommandResponse
 };
