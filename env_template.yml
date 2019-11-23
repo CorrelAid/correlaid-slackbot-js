@@ -1,0 +1,3 @@
+default:
+  SLACK_API_TOKEN: "anothergibberish"
+  SLACK_SIGNING_SECRET: "somegibberish"

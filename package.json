@@ -5,7 +5,7 @@
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "serverless-offline": "^5.10.1",
-    "serverless-plugin-include-dependencies": "^3.2.1",
+    "serverless-plugin-include-dependencies": "^4.0.0",
     "slack": "^11.0.2",
     "supports-color": "^7.0.0",
     "webpack": "^4.39.1",
