@@ -21,7 +21,7 @@ module.exports.handler = async function(event, context) {
           const telkoDetails = utils.readFromFile('./src/messages/telko_details.txt');
           return responses.buildSlashCommandResponse(telkoDetails, 'in_channel');
       } else if (commandArgs.subcommand == 'poll') {
-          const pollMessage = 'Ich bin heute abend um 20 Uhr bei der TelKo dabei! :+1: :-1:';
+          const pollMessage = utils.readFromFile('./src/messages/telko_poll.txt');
           return responses.buildSlashCommandResponse(pollMessage, 'in_channel');  
       } else {
           // unknown subcommand
