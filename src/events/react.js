@@ -21,16 +21,7 @@ module.exports.handler = async function(event, context) {
   } else if (eventBody.type === 'event_callback') {
     const slackEvent = eventBody.event;
     console.debug(slackEvent);
-    // send welcome message
-    if (slackEvent.type === 'member_joined_channel') {
-      const channel = slackEvent.channel;
-      const user = slackEvent.user;
-      // only if user joined #willkommen
-      if (channel === 'C1G5WNB7C') {
-        await slackUtils.send_welcome_message_to(user);
-        return responses.buildSuccessResponse('success');
-      }
-    } else if (slackEvent.type === 'link_shared') {
+    if (slackEvent.type === 'link_shared') {
       if (utils.containsLinkFromDomain(slackEvent.links, 'hackmd.io')) {
         const message = utils.readFromFile(
           './src/messages/link_to_orgapad.txt'
