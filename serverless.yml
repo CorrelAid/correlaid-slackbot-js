@@ -34,7 +34,7 @@ provider:
   environment: 
     SLACK_API_TOKEN: ${file(./env.yml):default.SLACK_API_TOKEN}
     SLACK_SIGNING_SECRET: ${file(./env.yml):default.SLACK_SIGNING_SECRET}
-    HACKMD_TABLE: hackmd-${opt:stage, self:provider.stage}
+    HACKMD_TABLE: hackmds-${opt:stage, self:provider.stage}
     DEBUG_CHANNEL: GSNQA3SBT
   iamRoleStatements:
     - Effect: Allow

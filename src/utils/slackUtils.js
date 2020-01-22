@@ -90,7 +90,6 @@ const postToChannel = async (channelId, message) => {
         );
         return response.data.error;
       } else {
-        console.log('successfully commented on post.');
       }
     })
     .catch(function(error) {
