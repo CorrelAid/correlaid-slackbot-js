@@ -73,6 +73,32 @@ const send_message_to = (channelId, message) => {
     });
 };
 
+const postToChannel = async (channelId, message) => {
+  return axios
+    .post(
+      'https://slack.com/api/chat.postMessage',
+      querystring.stringify({
+        token: SLACK_API_TOKEN,
+        channel: channelId,
+        text: message,
+      })
+    )
+    .then(function(response) {
+      if (response.data.ok == false) {
+        console.log(
+          `error comenting on post: ${response.data.ok}: ${response.data.error}`
+        );
+        return response.data.error;
+      } else {
+        console.log('successfully commented on post.');
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+      return error;
+    });
+};
+
 const commentOnPost = async (messageTs, channelId, message) => {
   return axios
     .post(
@@ -101,6 +127,6 @@ const commentOnPost = async (messageTs, channelId, message) => {
 };
 
 module.exports = {
-  send_welcome_message_to,
+  postToChannel,
   commentOnPost,
 };

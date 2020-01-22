@@ -34,7 +34,16 @@ provider:
   environment: 
     SLACK_API_TOKEN: ${file(./env.yml):default.SLACK_API_TOKEN}
     SLACK_SIGNING_SECRET: ${file(./env.yml):default.SLACK_SIGNING_SECRET}
-
+    HACKMD_TABLE: hackmd-${opt:stage, self:provider.stage}
+    DEBUG_CHANNEL: GSNQA3SBT
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
 functions:
   events:
     handler: src/events/react.handler
@@ -50,3 +59,19 @@ functions:
           path: correlaid-slackbot-js/slack-slash
           method: post
           cors: false
+resources:
+  Resources:
+    hackmds:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.HACKMD_TABLE}
+        AttributeDefinitions:
+          - AttributeName: url
+            AttributeType: S           
+        KeySchema:
+          - AttributeName: url
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
