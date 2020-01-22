@@ -19,7 +19,7 @@ const checkHackmdInDynamo = async (dynamoDb, url) => {
     }
   };
 
-  isInDynamoDb = await dynamoDb
+  const isInDynamoDb = await dynamoDb
     .get(params)
     .promise()
     .then(result => {
@@ -40,7 +40,7 @@ const addHackmdToDynamo = async (dynamoDb, url, data) => {
   if (isAlreadyInDynamo) {
     message = `${url} already in dynamodb. doing nothing.`
     console.log(message);
-    slackUtils.postToChannel(process.env.DEBUG_CHANNEL, message);
+    await slackUtils.postToChannel(process.env.DEBUG_CHANNEL, message);
     return;
   }
   const $ = await loadHtml(url);
