@@ -16,6 +16,13 @@ yarn install
 yarn test
 ```
 
+# lint 
+so far, only code formatting via `prettier` is implemented. To run:
+
+```
+yarn lint
+```
+
 # deploy to aws
 
 ## requirements
