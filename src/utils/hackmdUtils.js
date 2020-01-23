@@ -11,6 +11,19 @@ const cleanUrl = url => {
   return url.replace(editRegex, "");
 };
 
+const addHackmdToDynamo = async (dynamoDb, url, data) => {
+  const isAlreadyInDynamo = await checkHackmdInDynamo(dynamoDb, url)
+  if (isAlreadyInDynamo) {
+    message = `${url} already in dynamodb. doing nothing.`
+    console.log(message);
+    await slackUtils.postToChannel(process.env.DEBUG_CHANNEL, message);
+    return;
+  }
+  const $ = await loadHtml(url);
+  const title = getTitle($);
+  await createHackmdEntry(dynamoDb, url, title, data);
+};
+
 const checkHackmdInDynamo = async (dynamoDb, url) => {
   const params = {
     TableName: process.env.HACKMD_TABLE,
@@ -33,19 +46,6 @@ const checkHackmdInDynamo = async (dynamoDb, url) => {
       return false;
     });
     return isInDynamoDb;
-};
-
-const addHackmdToDynamo = async (dynamoDb, url, data) => {
-  const isAlreadyInDynamo = await checkHackmdInDynamo(dynamoDb, url)
-  if (isAlreadyInDynamo) {
-    message = `${url} already in dynamodb. doing nothing.`
-    console.log(message);
-    await slackUtils.postToChannel(process.env.DEBUG_CHANNEL, message);
-    return;
-  }
-  const $ = await loadHtml(url);
-  const title = getTitle($);
-  await createHackmdEntry(dynamoDb, url, title, data);
 };
 
 const createHackmdEntry = async (dynamoDb, url, title, data) => {
