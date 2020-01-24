@@ -34,8 +34,12 @@ provider:
   environment: 
     SLACK_API_TOKEN: ${file(./env.yml):default.SLACK_API_TOKEN}
     SLACK_SIGNING_SECRET: ${file(./env.yml):default.SLACK_SIGNING_SECRET}
+    SLACK_DEBUG_CHANNEL: ${file(./env.yml):default.SLACK_DEBUG_CHANNEL}
+    GITHUB_PAT: ${file(./env.yml):default.GITHUB_PAT}
+    GITHUB_OWNER: ${file(./env.yml):default.GITHUB_OWNER}
+    GITHUB_REPO: ${file(./env.yml):default.GITHUB_REPO}
+    GITHUB_FILE: ${file(./env.yml):default.GITHUB_FILE}
     HACKMD_TABLE: hackmds-${opt:stage, self:provider.stage}
-    DEBUG_CHANNEL: GSNQA3SBT
   iamRoleStatements:
     - Effect: Allow
       Action:

@@ -34,11 +34,7 @@ module.exports.handler = async function(event, context) {
                 for (const url of hackmdUrls) {
                     cleanedUrl = hackmdUtils.cleanUrl(url)
                     const data = slackEvent
-                    await hackmdUtils.addHackmdToDynamo(
-                        dynamoDb,
-                        cleanedUrl,
-                        data
-                    )
+                    await hackmdUtils.processHackmd(dynamoDb, cleanedUrl, data)
                 }
                 return responses.buildSuccessResponse('success')
             }

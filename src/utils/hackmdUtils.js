@@ -1,26 +1,25 @@
 require('dotenv').config()
 const axios = require('axios')
-const querystring = require('querystring')
-const utils = require('../utils/utils')
 const cheerio = require('cheerio')
-const request = require('request')
 const slackUtils = require('../utils/slackUtils')
+const githubUtils = require('../utils/githubUtils')
 
 const cleanUrl = url => {
-    editRegex = /\?both$/
+    editRegex = /\?.+?$/
     return url.replace(editRegex, '')
 }
 
-const addHackmdToDynamo = async (dynamoDb, url, data) => {
+const processHackmd = async (dynamoDb, url, data) => {
     const isAlreadyInDynamo = await checkHackmdInDynamo(dynamoDb, url)
     if (isAlreadyInDynamo) {
         message = `${url} already in dynamodb. doing nothing.`
         console.log(message)
-        await slackUtils.postToChannel(process.env.DEBUG_CHANNEL, message)
+        await slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, message)
         return
     }
     const $ = await loadHtml(url)
     const title = getTitle($)
+    await githubUtils.addUrlToReadme(url, title)
     await createHackmdEntry(dynamoDb, url, title, data)
 }
 
@@ -61,11 +60,11 @@ const createHackmdEntry = async (dynamoDb, url, title, data) => {
         if (err) {
             strErr = `unable to add item: ${JSON.stringify(err, null, 2)}`
             console.error(strErr)
-            slackUtils.postToChannel(process.env.DEBUG_CHANNEL, strErr)
+            slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, strErr)
         } else {
             message = `added item: ${JSON.stringify(params, null, 2)}`
             console.log(message)
-            slackUtils.postToChannel(process.env.DEBUG_CHANNEL, message)
+            slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, message)
         }
     })
 }
@@ -89,15 +88,14 @@ const getMarkdown = $ => {
 }
 
 const getTitle = $ => {
-    fullTitle = $('head title').text()
-    const regex = / - HackMD$/
-
     // strip " - HackMD" from title
     try {
+        fullTitle = $('head title').text()
+        const regex = / - HackMD$/
         title = fullTitle.replace(regex, '')
     } catch (error) {
         console.log(error)
-        title = fullTitle
+        title = 'title not known'
     }
     return title
 }
@@ -107,5 +105,5 @@ module.exports = {
     cleanUrl,
     getMarkdown,
     createHackmdEntry,
-    addHackmdToDynamo,
+    processHackmd,
 }
