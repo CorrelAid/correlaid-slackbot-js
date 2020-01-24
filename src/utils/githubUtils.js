@@ -14,9 +14,9 @@ const octokit = new Octokit({
 const getFile = async file => {
 
     return await octokit.repos.getContents({
-        GITHUB_OWNER,
-        GITHUB_REPO,
-        GITHUB_FILE
+        owner: GITHUB_OWNER,
+        repo: GITHUB_REPO,
+        path: GITHUB_FILE
       })
 }
 const addUrlToReadme = async (url, title) => {
@@ -38,11 +38,12 @@ const createLinkTextBase64 = (url, title) => {
 const updateFile = async (file, sha, newContent, commitMessage) => {
 
     await octokit.repos.createOrUpdateFile({
-        GITHUB_OWNER,
-        GITHUB_REPO,
-        GITHUB_FILE,
-        commitMessage,
-        newContent
+        owner: GITHUB_OWNER,
+        repo: GITHUB_REPO,
+        path: GITHUB_FILE,
+        message: commitMessage,
+        content: newContent,
+        sha: sha, 
     })
 }
 
