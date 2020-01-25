@@ -1,3 +1,8 @@
 default:
-  SLACK_API_TOKEN: "anothergibberish"
-  SLACK_SIGNING_SECRET: "somegibberish"
+  SLACK_API_TOKEN: "gibberish"
+  SLACK_SIGNING_SECRET: "moregibberish"
+  SLACK_DEBUG_CHANNEL: "channelidfordebug"
+  GITHUB_PAT: "githubpat"
+  GITHUB_OWNER: "ownerrepo"
+  GITHUB_REPO: "reponame"
+  GITHUB_FILE: "filename"

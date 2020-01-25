@@ -33,3 +33,20 @@ describe('getTitle', () => {
         expect(mdTitle).toBe('this is the title')
     })
 })
+
+describe('cleanURL', () => {
+    test('clean ?both url', () => {
+        const url = 'https://hackmd.io/dlfjlds?both'
+        expect(hackmdUtils.cleanUrl(url)).toBe('https://hackmd.io/dlfjlds')
+    })
+
+    test('clean ?edit url', () => {
+        const url = 'https://hackmd.io/dlfjlds?edit'
+        expect(hackmdUtils.cleanUrl(url)).toBe('https://hackmd.io/dlfjlds')
+    })
+
+    test('url without ext', () => {
+        const url = 'https://hackmd.io/dlfjlds'
+        expect(hackmdUtils.cleanUrl(url)).toBe('https://hackmd.io/dlfjlds')
+    })
+})

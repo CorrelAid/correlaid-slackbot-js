@@ -7,3 +7,5 @@ env\.yml
 \.DS_Store
 
 .serverless
+env_dev.yml
+env_prod.yml
