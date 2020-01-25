@@ -31,14 +31,16 @@ provider:
   runtime: nodejs10.x
   region: eu-central-1
   profile: personal-admin
+  stage: ${opt:stage, 'dev'}
+  env_file: ${file(./env_${self:provider.stage}.yml)
   environment: 
-    SLACK_API_TOKEN: ${file(./env.yml):default.SLACK_API_TOKEN}
-    SLACK_SIGNING_SECRET: ${file(./env.yml):default.SLACK_SIGNING_SECRET}
-    SLACK_DEBUG_CHANNEL: ${file(./env.yml):default.SLACK_DEBUG_CHANNEL}
-    GITHUB_PAT: ${file(./env.yml):default.GITHUB_PAT}
-    GITHUB_OWNER: ${file(./env.yml):default.GITHUB_OWNER}
-    GITHUB_REPO: ${file(./env.yml):default.GITHUB_REPO}
-    GITHUB_FILE: ${file(./env.yml):default.GITHUB_FILE}
+    SLACK_API_TOKEN: ${self:provider.env_file}:default.SLACK_API_TOKEN}
+    SLACK_SIGNING_SECRET: ${self:provider.env_file}:default.SLACK_SIGNING_SECRET}
+    SLACK_DEBUG_CHANNEL: ${self:provider.env_file}:default.SLACK_DEBUG_CHANNEL}
+    GITHUB_PAT: ${self:provider.env_file}:default.GITHUB_PAT}
+    GITHUB_OWNER: ${self:provider.env_file}:default.GITHUB_OWNER}
+    GITHUB_REPO: ${self:provider.env_file}:default.GITHUB_REPO}
+    GITHUB_FILE: ${self:provider.env_file}:default.GITHUB_FILE}
     HACKMD_TABLE: hackmds-${opt:stage, self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
