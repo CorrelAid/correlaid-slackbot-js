@@ -10,20 +10,24 @@ const octokit = new Octokit({
     auth: GITHUB_PAT,
 })
 
-const getFile = async () => {
-    return await octokit.repos.getContents({
+const getFile = () => {
+    return octokit.repos.getContents({
         owner: GITHUB_OWNER,
         repo: GITHUB_REPO,
         path: GITHUB_FILE,
     })
 }
 const addUrlToReadme = async (url, title) => {
-    readmeFile = await getFile()
-    // add url
-    newContent = createBase64Content(readmeFile.data.content, url, title)
-    sha = readmeFile.data.sha
-    commitMessage = `added link for ${url}`
-    await updateFile(sha, newContent, commitMessage)
+    await getFile()
+    .then(readme => {
+        // add url
+        console.log(`adding new content to readme`)
+        updateFile(readme, url, title)
+    })
+    .catch(error => {
+        console.log(error)
+    })
+
 }
 
 const createBase64Content = (oldContent, url, title) => {
@@ -35,8 +39,12 @@ const createBase64Content = (oldContent, url, title) => {
     return newContent
 }
 
-const updateFile = async (sha, newContent, commitMessage) => {
-    await octokit.repos.createOrUpdateFile({
+const updateFile = (readme, url, title) => {
+    newContent = createBase64Content(readme.data.content, url, title)
+    sha = readme.data.sha
+    commitMessage = `added link for ${url}`
+
+    octokit.repos.createOrUpdateFile({
         owner: GITHUB_OWNER,
         repo: GITHUB_REPO,
         path: GITHUB_FILE,

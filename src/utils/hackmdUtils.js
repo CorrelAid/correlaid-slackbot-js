@@ -10,17 +10,19 @@ const cleanUrl = url => {
 }
 
 const processHackmd = async (dynamoDb, url, data) => {
-    const isAlreadyInDynamo = await checkHackmdInDynamo(dynamoDb, url)
-    if (isAlreadyInDynamo) {
-        message = `${url} already in dynamodb. doing nothing.`
-        console.log(message)
-        await slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, message)
-        return
-    }
-    const $ = await loadHtml(url)
-    const title = getTitle($)
-    await githubUtils.addUrlToReadme(url, title)
-    await createHackmdEntry(dynamoDb, url, title, data)
+    await checkHackmdInDynamo(dynamoDb, url).then(async isAlreadyInDynamo => {
+        if (isAlreadyInDynamo) {
+            message = `${url} already in dynamodb. doing nothing.`
+            console.log(message)
+            slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, message)
+            return
+        }
+        
+        const $ = await loadHtml(url)
+        const title = getTitle($)
+        await githubUtils.addUrlToReadme(url, title)
+        await createHackmdEntry(dynamoDb, url, title, data)
+    })
 }
 
 const checkHackmdInDynamo = async (dynamoDb, url) => {
