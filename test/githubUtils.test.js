@@ -1,13 +1,14 @@
 require('dotenv').config()
 const githubUtils = require('../src/utils/githubUtils')
 
-test('link base64 creation', () => {
-    url = 'hackmd.io/foobar11'
-    title = 'this is a title'
-    const expectedStr = `- [${title}](${url})\n`
+test('content base64 creation', () => {
+    const url = 'hackmd.io/foobar11'
+    const title = 'this is a title'
+    const oldContent = ''
+    const expectedStr = `\n- [${title}](${url})`
 
-    // decode again
-    const baseContent = githubUtils.createLinkTextBase64(url, title)
+    const baseContent = githubUtils.createBase64Content(oldContent, url, title)
+    // decode again to compare
     const str = Buffer.from(baseContent, 'base64').toString('utf-8')
     expect(str).toBe(expectedStr)
 })

@@ -18,23 +18,30 @@ const getFile = () => {
     })
 }
 const addUrlToReadme = async (url, title) => {
-    await getFile()
-    .then(readme => {
-        // add url
-        console.log(`adding new content to readme`)
-        updateFile(readme, url, title)
-    })
-    .catch(error => {
-        console.log(error)
-    })
-
+    return getFile()
+        .then(readme => {
+            // add url
+            console.log(`adding new content to readme`)
+            updateFile(readme, url, title)
+        })
+        .catch(error => {
+            strErr = `error during adding to README: ${JSON.stringify(
+                error,
+                null,
+                2
+            )}`
+            console.log(strErr)
+            return Promise.reject(Error(strErr))
+        })
 }
 
 const createBase64Content = (oldContent, url, title) => {
     // decode old content
     const toAdd = `- [${title}](${url})`
-    const oldContentDec = Buffer.from(oldContent, "base64").toString('utf-8');
-    let newContent = Buffer.from(oldContentDec + "\n" + toAdd).toString('base64');
+    const oldContentDec = Buffer.from(oldContent, 'base64').toString('utf-8')
+    let newContent = Buffer.from(oldContentDec + '\n' + toAdd).toString(
+        'base64'
+    )
 
     return newContent
 }
@@ -44,14 +51,18 @@ const updateFile = (readme, url, title) => {
     sha = readme.data.sha
     commitMessage = `added link for ${url}`
 
-    octokit.repos.createOrUpdateFile({
-        owner: GITHUB_OWNER,
-        repo: GITHUB_REPO,
-        path: GITHUB_FILE,
-        message: commitMessage,
-        content: newContent,
-        sha: sha,
-    })
+    return octokit.repos
+        .createOrUpdateFile({
+            owner: GITHUB_OWNER,
+            repo: GITHUB_REPO,
+            path: GITHUB_FILE,
+            message: commitMessage,
+            content: newContent,
+            sha: sha,
+        })
+        .catch(error => {
+            return Promise.reject(Error(error))
+        })
 }
 
 module.exports = {
