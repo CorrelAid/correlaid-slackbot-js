@@ -9,3 +9,4 @@ env\.yml
 .serverless
 env_dev.yml
 env_prod.yml
+.vscode/settings.json
