@@ -1,6 +1,6 @@
 require('dotenv').config()
-const axios = require('axios')
 const Octokit = require('@octokit/rest')
+const utils = require('../utils/utils')
 const GITHUB_PAT = process.env.GITHUB_PAT
 const GITHUB_OWNER = process.env.GITHUB_OWNER
 const GITHUB_REPO = process.env.GITHUB_REPO
@@ -18,20 +18,16 @@ const getFile = () => {
     })
 }
 const addUrlToReadme = async (url, title) => {
-    return getFile()
-        .then(readme => {
+    return await getFile()
+        .then(async readme => {
             // add url
             console.log(`adding new content to readme`)
-            updateFile(readme, url, title)
+            await updateFile(readme, url, title)
         })
-        .catch(error => {
-            strErr = `error during adding to README: ${JSON.stringify(
-                error,
-                null,
-                2
-            )}`
-            console.log(strErr)
-            return Promise.reject(Error(strErr))
+        .catch(err => {
+            return Promise.reject(
+                Error(utils.stringifyErr(err), 'error during adding to README:')
+            )
         })
 }
 
@@ -46,7 +42,7 @@ const createBase64Content = (oldContent, url, title) => {
     return newContent
 }
 
-const updateFile = (readme, url, title) => {
+const updateFile = async (readme, url, title) => {
     newContent = createBase64Content(readme.data.content, url, title)
     sha = readme.data.sha
     commitMessage = `added link for ${url}`
@@ -60,8 +56,8 @@ const updateFile = (readme, url, title) => {
             content: newContent,
             sha: sha,
         })
-        .catch(error => {
-            return Promise.reject(Error(error))
+        .catch(err => {
+            return Promise.reject(Error(utils.stringifyErr(er)))
         })
 }
 

@@ -10,6 +10,12 @@ const readFromFile = path => {
     }
 }
 
+const stringifyErr = (error, beforeTxt = '') => {
+    strErr = JSON.stringify(error, null, 2)
+    strErr = `${beforeTxt} ${error.stack}}`
+    return strErr
+}
+
 const getCommandArgs = text => {
     let commandArgsList = text.trim().split(' ')
 
@@ -35,4 +41,5 @@ module.exports = {
     containsLinkFromDomain,
     readFromFile,
     getCommandArgs,
+    stringifyErr,
 }

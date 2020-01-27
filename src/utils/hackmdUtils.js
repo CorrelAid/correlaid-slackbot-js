@@ -3,6 +3,7 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const slackUtils = require('../utils/slackUtils')
 const githubUtils = require('../utils/githubUtils')
+const utils = require('../utils/utils')
 
 const cleanUrl = url => {
     editRegex = /\?.+?$/
@@ -18,16 +19,15 @@ const processHackmd = async (dynamoDb, url, slackEventData) => {
             try {
                 await createHackmdEntry(dynamoDb, url, title, slackEventData)
                 await githubUtils.addUrlToReadme(url, title)
-            } catch (error) {
-                return Promise.reject(error)
+            } catch (err) {
+                return Promise.reject(Error(stringifyErr(err)))
             }
         })
-        .catch(error => {
-            strErr = `error during hackmd processing: ${JSON.stringify(
-                error,
-                null,
-                2
-            )}}`
+        .catch(err => {
+            strErr = utils.stringifyErr(
+                err,
+                'an error occurred during hackmd processing:'
+            )
             slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, strErr)
             console.log(strErr)
         })
@@ -49,14 +49,16 @@ const needToProcessHackmd = async (dynamoDb, url) => {
             if (!!result.Item) {
                 // already in dynamodb
                 return Promise.reject(
-                    'hackmd already in dynamodb. doing nothing'
+                    Error('hackmd already in dynamodb. doing nothing')
                 )
             }
         })
-        .catch(error => {
+        .catch(err => {
             // rethrow the error
             return Promise.reject(
-                Error('error during querying dynamodb: ', error)
+                Error(
+                    utils.stringifyErr(err, 'error during querying dynamodb:')
+                )
             )
         })
 }
@@ -80,18 +82,32 @@ const createHackmdEntry = async (dynamoDb, url, title, slackEventData) => {
             slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, message)
             console.log(message)
         })
-        .catch(error => {
-            strErr = `unable to add item: ${JSON.stringify(error, null, 2)}`
-            return Promise.reject(Error(strErr))
+        .catch(err => {
+            return Promise.reject(
+                Error(utils.stringifyErr(err, 'unable to add item:'))
+            )
         })
 }
 
 const loadHtml = hackmdURL => {
-    return axios.get(hackmdURL).then(response => {
-        if (response.status === 200) {
-            return cheerio.load(response.data)
-        }
-    })
+    return axios
+        .get(hackmdURL)
+        .then(response => {
+            if (response.status === 200) {
+                return cheerio.load(response.data)
+            } else {
+                return Promise.reject(
+                    Error(
+                        `Could not load html for ${hackmdURL}: ${response.status}`
+                    )
+                )
+            }
+        })
+        .catch(err => {
+            return Promise.reject(
+                Error(`Could not load html for ${hackmdURL}: ${err.message}`)
+            )
+        })
 }
 
 const getMarkdown = $ => {
@@ -104,8 +120,8 @@ const getTitle = $ => {
         fullTitle = $('head title').text()
         const regex = / - HackMD$/
         title = fullTitle.replace(regex, '')
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.log(err)
         title = 'title not known'
     }
     return title
