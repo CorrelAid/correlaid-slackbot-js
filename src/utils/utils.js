@@ -11,8 +11,8 @@ const readFromFile = path => {
 }
 
 const stringifyErr = (error, beforeTxt = '') => {
-    strErr = JSON.stringify(error, null, 2)
-    strErr = `${beforeTxt} ${error.stack}}`
+    // if we reject only with a string, there's no error object.
+    strErr = `${beforeTxt} ${error.stack ? error.stack : error}}`
     return strErr
 }
 
