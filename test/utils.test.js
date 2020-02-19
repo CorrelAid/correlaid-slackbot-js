@@ -57,6 +57,19 @@ describe('containsLinkFromDomain', () => {
     })
 })
 
+describe('stringifyError function', () => {
+    test('formats error', () => {
+        const message = utils.stringifyErr(Error('foo bar', 'a text:'))
+        expect(message).toMatch('Error: foo bar')
+    })
+
+    test('non-existing file', () => {
+        expect(() => {
+            const message = utils.readFromFile('./test/data/doesnotexist.txt')
+        }).toThrow()
+    })
+})
+
 describe('readFromFile function', () => {
     test('read in file', () => {
         const message = utils.readFromFile('./test/data/welcome_message.txt')

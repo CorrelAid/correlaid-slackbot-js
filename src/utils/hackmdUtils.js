@@ -3,27 +3,37 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const slackUtils = require('../utils/slackUtils')
 const githubUtils = require('../utils/githubUtils')
+const utils = require('../utils/utils')
 
 const cleanUrl = url => {
     editRegex = /\?.+?$/
     return url.replace(editRegex, '')
 }
 
-const processHackmd = async (dynamoDb, url, data) => {
-    const isAlreadyInDynamo = await checkHackmdInDynamo(dynamoDb, url)
-    if (isAlreadyInDynamo) {
-        message = `${url} already in dynamodb. doing nothing.`
-        console.log(message)
-        await slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, message)
-        return
-    }
-    const $ = await loadHtml(url)
-    const title = getTitle($)
-    await githubUtils.addUrlToReadme(url, title)
-    await createHackmdEntry(dynamoDb, url, title, data)
+const processHackmd = async (dynamoDb, url, slackEventData) => {
+    return await needToProcessHackmd(dynamoDb, url)
+        .then(() => loadHtml(url))
+        .then($ => getTitle($))
+        .then(async title => {
+            // once we have the title we can add to dynamodb and to github readme
+            try {
+                await createHackmdEntry(dynamoDb, url, title, slackEventData)
+                await githubUtils.addUrlToReadme(url, title)
+            } catch (err) {
+                return Promise.reject(Error(stringifyErr(err)))
+            }
+        })
+        .catch(err => {
+            strErr = utils.stringifyErr(
+                err,
+                'an error occurred during hackmd processing:'
+            )
+            slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, strErr)
+            console.log(strErr)
+        })
 }
 
-const checkHackmdInDynamo = async (dynamoDb, url) => {
+const needToProcessHackmd = async (dynamoDb, url) => {
     const params = {
         TableName: process.env.HACKMD_TABLE,
         Key: {
@@ -31,56 +41,73 @@ const checkHackmdInDynamo = async (dynamoDb, url) => {
         },
     }
 
-    const isInDynamoDb = await dynamoDb
+    return dynamoDb
         .get(params)
         .promise()
         .then(result => {
-            if (result.Item) {
-                return true
+            console.log(result)
+            if (!!result.Item) {
+                // already in dynamodb
+                return Promise.reject(
+                    Error('hackmd already in dynamodb. doing nothing')
+                )
             }
-            return false
         })
-        .catch(error => {
-            console.error("couldn't find hackmd", error)
-            return false
+        .catch(err => {
+            // rethrow the error
+            return Promise.reject(
+                Error(
+                    utils.stringifyErr(err, 'error during querying dynamodb:')
+                )
+            )
         })
-    return isInDynamoDb
 }
 
-const createHackmdEntry = async (dynamoDb, url, title, data) => {
+const createHackmdEntry = async (dynamoDb, url, title, slackEventData) => {
     const params = {
         TableName: process.env.HACKMD_TABLE,
         Item: {
             url: url,
             title: title,
-            data: data,
+            slackEventData: slackEventData,
+            source: 'lambda',
         },
     }
-    await dynamoDb.put(params, function(err, data) {
-        if (err) {
-            strErr = `unable to add item: ${JSON.stringify(err, null, 2)}`
-            console.error(strErr)
-            slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, strErr)
-        } else {
+
+    return dynamoDb
+        .put(params)
+        .promise()
+        .then(() => {
             message = `added item: ${JSON.stringify(params, null, 2)}`
-            console.log(message)
             slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, message)
-        }
-    })
+            console.log(message)
+        })
+        .catch(err => {
+            return Promise.reject(
+                Error(utils.stringifyErr(err, 'unable to add item:'))
+            )
+        })
 }
 
-const loadHtml = async hackmdURL => {
-    const $ = await axios
+const loadHtml = hackmdURL => {
+    return axios
         .get(hackmdURL)
         .then(response => {
             if (response.status === 200) {
                 return cheerio.load(response.data)
+            } else {
+                return Promise.reject(
+                    Error(
+                        `Could not load html for ${hackmdURL}: ${response.status}`
+                    )
+                )
             }
         })
-        .catch(function(error) {
-            console.log(error)
+        .catch(err => {
+            return Promise.reject(
+                Error(`Could not load html for ${hackmdURL}: ${err.message}`)
+            )
         })
-    return $
 }
 
 const getMarkdown = $ => {
@@ -93,8 +120,8 @@ const getTitle = $ => {
         fullTitle = $('head title').text()
         const regex = / - HackMD$/
         title = fullTitle.replace(regex, '')
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.log(err)
         title = 'title not known'
     }
     return title

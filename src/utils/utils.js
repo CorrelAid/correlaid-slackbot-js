@@ -10,6 +10,12 @@ const readFromFile = path => {
     }
 }
 
+const stringifyErr = (error, beforeTxt = '') => {
+    // if we reject only with a string, there's no error object.
+    strErr = `${beforeTxt} ${error.stack ? error.stack : error}}`
+    return strErr
+}
+
 const getCommandArgs = text => {
     let commandArgsList = text.trim().split(' ')
 
@@ -35,4 +41,5 @@ module.exports = {
     containsLinkFromDomain,
     readFromFile,
     getCommandArgs,
+    stringifyErr,
 }
