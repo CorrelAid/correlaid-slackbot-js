@@ -16,7 +16,7 @@ const postToChannel = async (channelId, message) => {
         .then(function(response) {
             if (response.data.ok == false) {
                 console.log(
-                    `error comenting on post: ${response.data.ok}: ${response.data.error}`
+                    `error comenting in channel: ${response.data.ok}: ${response.data.error}`
                 )
                 return response.data.error
             } else {
@@ -28,6 +28,34 @@ const postToChannel = async (channelId, message) => {
         })
 }
 
+const commentOnPost = async (messageTs, channelId, message) => {
+    return axios
+      .post(
+        'https://slack.com/api/chat.postMessage',
+        querystring.stringify({
+          token: SLACK_API_TOKEN,
+          channel: channelId,
+          text: message,
+          thread_ts: messageTs,
+        })
+      )
+      .then(function(response) {
+        if (response.data.ok == false) {
+          console.log(
+            `error comenting on post: ${response.data.ok}: ${response.data.error}`
+          );
+          return response.data.error;
+        } else {
+          console.log('successfully commented on post.');
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+        return error;
+      });
+  };
+
 module.exports = {
     postToChannel,
+    commentOnPost
 }
