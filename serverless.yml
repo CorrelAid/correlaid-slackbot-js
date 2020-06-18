@@ -42,14 +42,6 @@ provider:
     GITHUB_REPO: ${self:provider.env_file}:default.GITHUB_REPO}
     GITHUB_FILE: ${self:provider.env_file}:default.GITHUB_FILE}
     HACKMD_TABLE: hackmds-${opt:stage, self:provider.stage}
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-      Resource: "*"
 functions:
   events:
     handler: src/events/react.handler
@@ -58,26 +50,16 @@ functions:
           path: correlaid-slackbot-js/slack-events
           method: post
           cors: false
-  slash:
+  slash-telko:
     handler: src/slash/telko.handler
     events:
       - http:
-          path: correlaid-slackbot-js/slack-slash
+          path: correlaid-slackbot-js/slash-telko
           method: post
           cors: false
-resources:
-  Resources:
-    hackmds:
-      Type: AWS::DynamoDB::Table
-      DeletionPolicy: Retain
-      Properties:
-        TableName: ${self:provider.environment.HACKMD_TABLE}
-        AttributeDefinitions:
-          - AttributeName: url
-            AttributeType: S           
-        KeySchema:
-          - AttributeName: url
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+  project-update:
+    handler: src/cron/projectupdate.handler
+    events:
+      - schedule: rate(14 days)
+      - schedule: cron(0 12 * * ? *)
+  
