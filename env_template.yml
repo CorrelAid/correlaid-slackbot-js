@@ -5,5 +5,5 @@ default:
   GITHUB_PAT: "githubpat"
   GITHUB_OWNER: "ownerrepo"
   GITHUB_REPO: "reponame"
-  GITHUB_FILE: "filename"
   SLACK_CHANNEL_LIST: "pad.correlaid.org/link"
+  GITHUB_PROJECT_ID: "id of projects project in github"

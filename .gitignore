@@ -11,3 +11,4 @@ env_dev.yml
 env_prod.yml
 .vscode/settings.json
 correlaid-slackbot.code-workspace
+.env.yml

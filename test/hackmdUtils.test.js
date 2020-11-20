@@ -12,17 +12,6 @@ test.skip('loadHTML', async () => {
     expect($('head title').text()).toContain('this is the title')
 })
 
-describe('getSlackChannelList', () => {
-    test('gets slack channel list for project updates from pad.correlaid.org', async () => {
-        const md = utils.readFromFile('./test/data/test_slack_channel_list.md')
-
-        const text = await hackmdUtils.downloadFromCodiMD(
-            'https://pad.correlaid.org/z8UHG_pLRGaVhJ0aBK7pKw/download'
-        )
-        expect(text).toBe(md)
-    })
-})
-
 describe('getMarkdown', () => {
     test('parse HTML correctly and extract markdown content', async () => {
         const md = utils.readFromFile('./test/data/test_hackmd.md')
