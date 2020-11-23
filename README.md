@@ -36,7 +36,7 @@ The variables are (used in `serverless.yml`):
 
 - `SLACK_API_TOKEN`: the "Bot User Oauth Access Token" of the CorrelBot Slack App. You can find it on the "OAuth & Permissins" subpage of the CorrelBot Slack App page (only accessible with the suitable permissions for the CorrelAid workspace).
 - `SLACK_SIGNING_SECRET`: the signing secret that slack uses to generate the [signature header](https://api.slack.com/docs/verifying-requests-from-slack). You can find it on the "Basic Information" page of the CorrelBot Slack App (only accessible with the suitable permissions for the CorrelAid workspace).
-- `SLACK_PROJECTS_CHANNEL`: 
+- `SLACK_PROJECTS_CHANNEL`: ID of channel where the automated project update should be posted each Monday morning.
 - `GITHUB_PAT`: Github personal access token (PAT) from a user with write access to the `CorrelAid/projects` repository.
 - `GITHUB_OWNER`: owner of the repository. In this case, "correlaid". 
 - `GITHUB_REPO`: name of repository. In this case, "projects".
