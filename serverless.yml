@@ -32,7 +32,7 @@ provider:
   region: eu-central-1
   profile: personal-admin
   stage: ${opt:stage, 'dev'}
-  env_file: ${file(./env_${self:provider.stage}.yml)
+  env_file: ${file(./.env_${self:provider.stage}.yml)
   environment: 
     SLACK_API_TOKEN: ${self:provider.env_file}:default.SLACK_API_TOKEN}
     SLACK_SIGNING_SECRET: ${self:provider.env_file}:default.SLACK_SIGNING_SECRET}

@@ -1,14 +1,11 @@
 node_modules
 
 \.env
-
-env\.yml
+.env*.yml
 
 \.DS_Store
-
 .serverless
-env_dev.yml
-env_prod.yml
+
+# vscode 
 .vscode/settings.json
 correlaid-slackbot.code-workspace
-.env.yml
