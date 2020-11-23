@@ -1,4 +1,4 @@
-# correlaid-slackbot-js :robot_face:
+# correlaid-slackbot-js :robot:
 
 Re-implemenation of the CorrelAid Slackbot *CorrelBot* in Node.js with AWS Lambda and the [serverless](https://serverless.com) framework.
 
