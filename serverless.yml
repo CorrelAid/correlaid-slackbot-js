@@ -64,7 +64,7 @@ functions:
           method: post
           cors: false
   project-update-entrypoint:
-    handler: src/cron/projectupdateEntrypoint.handler
+    handler: src/slash/projectupdateEntrypoint.handler
     events:
       - schedule: cron(0 10 ? * MON *)
       - http:
@@ -72,5 +72,5 @@ functions:
           method: post
           cors: false
   project-update:
-    handler: src/cron/projectupdate.handler
+    handler: src/slash/projectupdate.handler
     timeout: 20
