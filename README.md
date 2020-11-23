@@ -36,12 +36,11 @@ The variables are (used in `serverless.yml`):
 
 - `SLACK_API_TOKEN`: the "Bot User Oauth Access Token" of the CorrelBot Slack App. You can find it on the "OAuth & Permissins" subpage of the CorrelBot Slack App page (only accessible with the suitable permissions for the CorrelAid workspace).
 - `SLACK_SIGNING_SECRET`: the signing secret that slack uses to generate the [signature header](https://api.slack.com/docs/verifying-requests-from-slack). You can find it on the "Basic Information" page of the CorrelBot Slack App (only accessible with the suitable permissions for the CorrelAid workspace).
-- `SLACK_DEBUG_CHANNEL`: ID of Slack channel where debug information should be posted. This makes it easier to get feedback whether the application is working correctly. 
-- `GITHUB_PAT`: Github personal access token (PAT) from a user with write access to the `CorrelAid/hackmds` repository.
+- `SLACK_PROJECTS_CHANNEL`: 
+- `GITHUB_PAT`: Github personal access token (PAT) from a user with write access to the `CorrelAid/projects` repository.
 - `GITHUB_OWNER`: owner of the repository. In this case, "correlaid". 
-- `GITHUB_REPO`: name of repository. In this case, "hackmds". Repository needs to exist beforehand (will not be created by the application).
-- `GITHUB_FILE`: file that new links should be posted to. For development purposes, set to `dev.md`. For production, set to `README.md`. 
-
+- `GITHUB_REPO`: name of repository. In this case, "projects".
+- `GITHUB_PROJECT_ID`: ID of the "projects" project in GitHub.
 
 Check `env_template.yml` for how the `env_{stage}.yml` file should look like and generate it accordingly.
 
