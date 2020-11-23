@@ -4,8 +4,19 @@ const utils = require('../utils/utils')
 const GITHUB_PAT = process.env.GITHUB_PAT
 const GITHUB_OWNER = process.env.GITHUB_OWNER
 const GITHUB_REPO = process.env.GITHUB_REPO
-const GITHUB_FILE = process.env.GITHUB_FILE
 const GITHUB_PROJECT_ID = process.env.GITHUB_PROJECT_ID
+const EMOJIS = [
+    ':thinking_face:',
+    ':speech_balloon:',
+    ':busts_in_silhouette:',
+    ':hammer_and_wrench:',
+    ':mag_right:',
+    ':handshake:',
+    ':writing_hand:',
+    ':white_check_mark:',
+    ':x:',
+]
+
 const octokit = new Octokit({
     auth: GITHUB_PAT,
 })
@@ -82,27 +93,31 @@ const getCardsByCol = async () => {
     }
     return cardsByCol
 }
-
 const createBoardSummaryText = columns => {
     // const emojis = {} // define emoijs for each column
-    const cols = columns.map(col => {
-        return `${col.column_name}: ${col.elements.length} projects`
+    colTexts = ['This is the current status of the project board']
+    columns.forEach((col, index) => {
+        colTexts.push(
+            `${EMOJIS[index]} ${col.column_name}: ${col.elements.length} projects`
+        )
     })
-
-    return cols.join('\n')
+    colTexts.push(
+        'Note: there are still >30 older projects outside the board which are not counted in this summary.'
+    )
+    return colTexts.join('\n')
 }
 
 const createColumnSummaryTexts = columns => {
-    // const emojis = {} // define emoijs for each column
     colTexts = []
-    columns.forEach(col => {
-        let txt = `${col.column_name}: ${col.elements.length}`
-        let projectTexts = col.elements.map(proj => proj.title)
+    columns.forEach((col, index) => {
+        let txt = `${EMOJIS[index]} ${col.column_name}: ${col.elements.length}`
+        let projectTexts = col.elements.map(proj => `- ${proj.title}`)
         let fullText = [txt, ...projectTexts].join('\n')
         colTexts.push(fullText)
     })
     return colTexts
 }
+
 module.exports = {
     getCardsByCol,
     createColumnSummaryTexts,

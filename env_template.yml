@@ -2,6 +2,7 @@ default:
   SLACK_API_TOKEN: "gibberish"
   SLACK_SIGNING_SECRET: "moregibberish"
   SLACK_DEBUG_CHANNEL: "channelidfordebug"
+  SLACK_PROJECTS_CHANNEL: "channel id of projects channel"
   GITHUB_PAT: "githubpat"
   GITHUB_OWNER: "ownerrepo"
   GITHUB_REPO: "reponame"

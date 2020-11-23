@@ -25,7 +25,7 @@ package:
 plugins:
   - serverless-plugin-include-dependencies
   - serverless-offline
-
+  - serverless-pseudo-parameters
 provider:
   name: aws
   runtime: nodejs10.x
@@ -37,11 +37,17 @@ provider:
     SLACK_API_TOKEN: ${self:provider.env_file}:default.SLACK_API_TOKEN}
     SLACK_SIGNING_SECRET: ${self:provider.env_file}:default.SLACK_SIGNING_SECRET}
     SLACK_DEBUG_CHANNEL: ${self:provider.env_file}:default.SLACK_DEBUG_CHANNEL}
+    SLACK_PROJECTS_CHANNEL: ${self:provider.env_file}:default.SLACK_PROJECTS_CHANNEL}
     GITHUB_PAT: ${self:provider.env_file}:default.GITHUB_PAT}
     GITHUB_OWNER: ${self:provider.env_file}:default.GITHUB_OWNER}
     GITHUB_REPO: ${self:provider.env_file}:default.GITHUB_REPO}
-    GITHUB_FILE: ${self:provider.env_file}:default.GITHUB_FILE}
-    HACKMD_TABLE: hackmds-${opt:stage, self:provider.stage}
+    GITHUB_PROJECT_ID: ${self:provider.env_file}:default.GITHUB_PROJECT_ID}
+    PROJECTUPDATE_ARN: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:correlaid-slackbot-js-${self:provider.stage}-project-update"
+  iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - lambda:InvokeFunction
+        Resource: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:correlaid-slackbot-js-${self:provider.stage}-project-update"
 functions:
   events:
     handler: src/events/react.handler
@@ -57,9 +63,14 @@ functions:
           path: correlaid-slackbot-js/slash-telko
           method: post
           cors: false
+  project-update-entrypoint:
+    handler: src/cron/projectupdateEntrypoint.handler
+    events:
+      - schedule: cron(0 10 ? * MON *)
+      - http:
+          path: correlaid-slackbot-js/slash-projectupdate-entrypoint
+          method: post
+          cors: false
   project-update:
     handler: src/cron/projectupdate.handler
-    events:
-      - schedule: rate(14 days)
-      - schedule: cron(0 12 * * ? *)
-  
+    timeout: 20
