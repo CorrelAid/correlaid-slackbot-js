@@ -20,6 +20,7 @@ const postToChannel = async (channelId, message) => {
                 )
                 return response.data.error
             } else {
+                return response
             }
         })
         .catch(function(error) {

@@ -2,27 +2,22 @@ const querystring = require('querystring')
 const responses = require('../utils/responses')
 const verifyUtils = require('../utils/verifyUtils')
 const utils = require('../utils/utils')
-const hackmdUtils = require('../utils/hackmdUtils')
+const githubUtils = require('../utils/githubUtils')
+const slackUtils = require('../utils/slackUtils')
 
 const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET
+const SLACK_PROJECTS_CHANNEL = process.env.SLACK_PROJECTS_CHANNEL
 
 module.exports.handler = async function(event, context) {
-    // check whether request is coming from slack
-    if (!verifyUtils.requestIsVerified(event, SLACK_SIGNING_SECRET)) {
-        return responses.buildForbiddenResponse()
+    // this will be triggerd by the entrypoint so we do not need to verify the slack secret
+    console.log(event)
+    const channelId = event.channel_id
+    const cardsByCol = await githubUtils.getCardsByCol()
+    const message = githubUtils.createBoardSummaryText(cardsByCol)
+    const result = await slackUtils.postToChannel(channelId, message)
+    // use the messageTs to thread
+    const colTexts = githubUtils.createColumnSummaryTexts(cardsByCol)
+    for (const colText of colTexts) {
+        await slackUtils.commentOnPost(result.data.ts, channelId, colText)
     }
-
-    console.log(event.body)
-    // get list of slack channels that need to be posted to from pad.correlaid.org
-    await loadHtml(process.env.SLACK_CHANNEL_LIST)
-        .then($ => getMarkdown($))
-        .then()
-        .catch(err => {
-            strErr = utils.stringifyErr(
-                err,
-                'an error occurred during codimd processing:'
-            )
-            slackUtils.postToChannel(process.env.SLACK_DEBUG_CHANNEL, strErr)
-            console.log(strErr)
-        })
 }
