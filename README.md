@@ -1,6 +1,13 @@
 # correlaid-slackbot-js
 
-reimplemenation of correlaid slackbot in javascript.
+re-implemenation of the CorrelAid Slackbot in Javascript with AWS Lambda and the [serverless](https://serverless.com) framework.
+
+Current features:
+- /telko slash command: post simple "poll" or show details for the core team call
+- /projectupdate slash command: post summary of the [projects Kanban board](https://github.com/CorrelAid/projects/projects/1)
+- automated project update: posts summary of the [projects Kanban board](https://github.com/CorrelAid/projects/projects/1) every Monday to the #projects channel.
+- comment under links from domain pad.correlaid.org to remind people how they can get access
+- comment under links from domain hackmd.io that we have transitioned to pad.correlaid.org and that the content should be transferred there.
 
 # install
 
