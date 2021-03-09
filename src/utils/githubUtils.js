@@ -8,12 +8,13 @@ const GITHUB_PROJECT_ID = process.env.GITHUB_PROJECT_ID
 const EMOJIS = [
     ':thinking_face:',
     ':speech_balloon:',
+    ':mag_right:',
     ':busts_in_silhouette:',
     ':hammer_and_wrench:',
-    ':mag_right:',
     ':handshake:',
     ':writing_hand:',
     ':white_check_mark:',
+    ':eyes:',
     ':x:',
 ]
 
